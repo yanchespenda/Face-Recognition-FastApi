@@ -1,8 +1,10 @@
 FROM python:3.8
 
+COPY ./requirements.txt /
+
 RUN pip3 install -r requirements.txt
 
-EXPOSE 80
+EXPOSE 8080
 
 COPY ./app /app
 
