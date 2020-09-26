@@ -19,8 +19,14 @@ app = FastAPI()
 ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
 
 # Develop Only
-public_raw_key = os.getenv("JWT_PUBLIC") or  b"""-----BEGIN PUBLIC KEY-----
-PUBLIC_KEY
+public_raw_key = b"""-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzIe8CRIuNCFx6CufYA6R
+K0vR3hnlMG+Xbdg48mYH2rPqR4Eg4mVjLRMQlvCM5AQBkdd3aWvVV3/1n1hdGhRI
+AHfaI/WR5x/reDgxCFaQ1tc6sLqrt8ObdrIVmmxqT1sl+eoUdQC91mfD4Qat/ea6
+PMcqyFPu1u0+Ht10Mmi5eErX7meuGYqGU28W0ZOZXrq1dhHe1xZzb+XwvepGgWcd
+v3mG1g7vayz0kLgcnO7eVWhDBtPPrL2uGssi5TZC+MYxEBEeOeybV/0onOG8p7og
+5Q7ua+xk+u3GG/CnuHhXLLXKygDrf7EtQoSmf0FX0O20Z16Fp25+EF4b/Qy9AG9Y
+9wIDAQAB
 -----END PUBLIC KEY-----
 """
 JWT_PUBLIC = serialization.load_pem_public_key(public_raw_key, backend=default_backend())
