@@ -3,3 +3,4 @@ face-recognition-models==0.3.0
 fastapi==0.61.1
 pycparser==2.20
 uvicorn
+python-multipart
