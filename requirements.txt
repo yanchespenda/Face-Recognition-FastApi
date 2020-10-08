@@ -8,3 +8,4 @@ pyjwt
 cryptography
 validator-collection
 requests
+httptools
