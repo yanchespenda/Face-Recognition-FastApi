@@ -1,6 +1,6 @@
 face-recognition==1.3.0
 face-recognition-models==0.3.0
-fastapi[all]
+fastapi==0.61.1
 pycparser==2.20
 uvicorn
 python-multipart
