@@ -34,7 +34,7 @@ RUN cd ~ && \
     cd  dlib/ && \
     python3 setup.py install --yes USE_AVX_INSTRUCTIONS
 
-RUN pip3 install uvicorn gunicorn
+RUN pip3 install uvicorn gunicorn uvloop
 
 COPY ./start.sh /start.sh
 RUN chmod +x /start.sh
