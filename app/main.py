@@ -74,6 +74,24 @@ def allowed_file(filename: str):
     return '.' in filename and \
        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def return_index_error(resources: List, detail = False):
+    if detail:
+        ret_return = []
+        for resource in resources:
+            ret_return.append({
+                "result": bool(False),
+                "distance": float(1.0)
+            })
+
+        return {
+            "result": bool(False),
+            "detail": ret_return
+        }
+    else:
+        return {
+            "result": bool(False),
+        }
+
 @app.get("/")
 def root():
     return {
@@ -120,7 +138,10 @@ async def verify_file(authorization: str = Header(None), resources: List[UploadF
             )
 
         image_resource = face_recognition.load_image_file(file.file)
-        image_encode = face_recognition.face_encodings(image_resource)[0]
+        try:
+            image_encode = face_recognition.face_encodings(image_resource)[0]
+        except IndexError as e:
+            return return_index_error(resources, detail)
         resources_image.append(image_encode)
 
     if not allowed_file(verify.filename):
@@ -130,7 +151,10 @@ async def verify_file(authorization: str = Header(None), resources: List[UploadF
         )
 
     verify_image = face_recognition.load_image_file(verify.file)
-    verify_image = face_recognition.face_encodings(verify_image)[0]
+    try:
+        verify_image = face_recognition.face_encodings(verify_image)[0]
+    except IndexError as e:
+        return return_index_error(resources, detail)
 
     ret = face_recognition.compare_faces(resources_image, verify_image, TOLERANCE)
 
@@ -213,7 +237,10 @@ async def verify_url(authorization: str = Header(None), resources: List[str] = B
         )
 
     verify_image = face_recognition.load_image_file(verify_dir)
-    verify_image = face_recognition.face_encodings(verify_image)[0]
+    try:
+        verify_image = face_recognition.face_encodings(verify_image)[0]
+    except IndexError as e:
+        return return_index_error(resources, detail)
 
     # Download resources image
     resources_image = []
@@ -234,7 +261,10 @@ async def verify_url(authorization: str = Header(None), resources: List[str] = B
             )
 
         image_resource = face_recognition.load_image_file(resource_dir)
-        image_encode = face_recognition.face_encodings(image_resource)[0]
+        try:
+            image_encode = face_recognition.face_encodings(image_resource)[0]
+        except IndexError as e:
+            return return_index_error(resources, detail)
         resources_image.append(image_encode)
         resources_temp.append(resource_dir)
 
