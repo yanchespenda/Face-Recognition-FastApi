@@ -129,6 +129,8 @@ async def verify_file(authorization: str = Header(None), resources: List[UploadF
     if decoded is None:
         raise credentials_exception
 
+    print("Incoming prosess")
+
     resources_image = []
     for file in resources:
         if not allowed_file(file.filename):
@@ -176,6 +178,7 @@ async def verify_file(authorization: str = Header(None), resources: List[UploadF
         if result:
             final_result = result
 
+    print("Prosess result: {}".format(final_result))
     if is_detail is False:
         return_json = {
             "result": bool(final_result)
@@ -227,8 +230,11 @@ async def verify_url(authorization: str = Header(None), resources: List[str] = B
             detail="Verify image not valid",
         )
 
+    print("Incoming prosess")
+
     # Download verify image
     try:
+        print("Downloading images verify: {}".format(verify))
         verify_dir = download(verify, dest_folder=TEMP_DIR)
     except:
         raise HTTPException(
@@ -240,6 +246,7 @@ async def verify_url(authorization: str = Header(None), resources: List[str] = B
     try:
         verify_image = face_recognition.face_encodings(verify_image)[0]
     except IndexError as e:
+        os.remove(verify_dir)
         return return_index_error(resources, detail)
 
     # Download resources image
@@ -253,6 +260,7 @@ async def verify_url(authorization: str = Header(None), resources: List[str] = B
             )
 
         try:
+            print("Downloading images resource: {}".format(resource))
             resource_dir = download(resource, dest_folder=TEMP_DIR)
         except:
             raise HTTPException(
@@ -264,6 +272,8 @@ async def verify_url(authorization: str = Header(None), resources: List[str] = B
         try:
             image_encode = face_recognition.face_encodings(image_resource)[0]
         except IndexError as e:
+            for resourcex in resources_temp:
+                os.remove(resourcex)
             return return_index_error(resources, detail)
         resources_image.append(image_encode)
         resources_temp.append(resource_dir)
@@ -288,10 +298,13 @@ async def verify_url(authorization: str = Header(None), resources: List[str] = B
             final_result = result
 
     # Clean up tmp downloads
+    print("Cleaning up images")
     os.remove(verify_dir)
     for resource in resources_temp:
         os.remove(resource)
 
+
+    print("Prosess result: {}".format(final_result))
     if is_detail is False:
         return_json = {
             "result": bool(final_result)
